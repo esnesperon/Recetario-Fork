@@ -1,0 +1,17 @@
+===
+Esperon Abilleira, Alex
+77481677J
+===
+
+Recetario con versiones tipo fork
+
+Cohesión:
+
+Robustez:
+
+Back end:
+
+Front end:
+
+Nota:
+
