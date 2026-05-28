@@ -31,9 +31,22 @@ Asegúrate de que Redis está ejecutándose en tu máquina. En una terminal nuev
 redis-server &
 ```
 
-Vuelve a la terminal de tu entorno virtual en la carpeta `src` e inicia la aplicación:
+Vuelve a la terminal de tu entorno virtual en la carpeta `src`. Tienes varias alternativas para iniciar la aplicación:
+
+**Opción 1: Usando el script principal (Desarrollo)**
 ```bash
 python run.py
+```
+
+**Opción 2: Usando la CLI de Flask (Desarrollo)**
+```bash
+flask --app run run --debug
+```
+
+**Opción 3: Usando Waitress (Producción en Windows)**
+```bash
+pip install waitress
+waitress-serve --port=5000 run:app
 ```
 La aplicación estará disponible en 👉 <http://127.0.0.1:5000>.
 
@@ -45,20 +58,25 @@ La aplicación estará disponible en 👉 <http://127.0.0.1:5000>.
 
 ## Estructura del Código
 ```
-src/
-  run.py                # Script de entrada
-  config.py             # Configuración y variables de entorno
-  requirements.txt      # Dependencias
-  docs/                 # Scripts para generación de memoria PDF
-  app/
-    __init__.py         # Application Factory
-    extensions.py       # Inicialización de Sirope, LoginManager y CSRFProtect
-    errors.py           # Manejadores de error globales (404, 500...)
-    forms.py            # Definición de formularios WTForms
-    models/             # Modelos de datos (User, Recipe, Comment, etc.)
-    views/              # Controladores estructurados por Blueprints
-    templates/          # Vistas (Jinja2) potenciadas con HTMX
-    static/             # CSS y almacenamiento de subidas (uploads)
+/
+  README.md
+  doc/                  # Documentación del proyecto
+    diagramas/          # Diagramas (arquitectura, BD, etc.)
+    documentacion_practica.pdf # Memoria del proyecto en PDF
+    info.txt            # Información del alumno y enlaces
+  src/
+    run.py              # Script de entrada
+    config.py           # Configuración y variables de entorno
+    requirements.txt    # Dependencias
+    app/
+      __init__.py       # Application Factory
+      extensions.py     # Inicialización de Sirope, LoginManager y CSRFProtect
+      errors.py         # Manejadores de error globales (404, 500...)
+      forms.py          # Definición de formularios WTForms
+      models/           # Modelos de datos (User, Recipe, Comment, etc.)
+      views/            # Controladores estructurados por Blueprints
+      templates/        # Vistas (Jinja2) potenciadas con HTMX
+      static/           # CSS y almacenamiento de subidas (uploads)
 ```
 
 ## Notas de diseño e Interacción
