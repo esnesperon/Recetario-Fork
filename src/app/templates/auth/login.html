@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Entrar{% endblock %}
+{% block content %}
+<article class="form-narrow">
+  <h2>Iniciar sesión</h2>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <label>{{ form.username.label.text }}{{ form.username(autofocus=True) }}</label>
+    {% for e in form.username.errors %}<small class="err">{{ e }}</small>{% endfor %}
+    <label>{{ form.password.label.text }}{{ form.password() }}</label>
+    {% for e in form.password.errors %}<small class="err">{{ e }}</small>{% endfor %}
+    {{ form.submit(class_="contrast") }}
+  </form>
+  <p class="muted">¿No tienes cuenta? <a href="{{ url_for('auth.register') }}">Regístrate</a>.</p>
+</article>
+{% endblock %}

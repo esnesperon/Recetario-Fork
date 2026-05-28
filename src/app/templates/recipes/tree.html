@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Árbol de versiones{% endblock %}
+
+{% macro node(n) %}
+  {% if n %}
+    <li>
+      <a href="{{ url_for('recipes.detail', safe=n.oid) }}"
+         {% if n.is_current %}class="current"{% endif %}>
+        {{ n.r.title }}
+      </a>
+      <small class="muted">· {{ n.r.author_username }}</small>
+      {% if n.children %}
+        <ul>
+          {% for c in n.children %}{{ node(c) }}{% endfor %}
+        </ul>
+      {% endif %}
+    </li>
+  {% endif %}
+{% endmacro %}
+
+{% block content %}
+<article>
+  <header>
+    <a href="{{ url_for('recipes.detail', safe=current_oid) }}">← Volver</a>
+    <h2>Árbol de versiones</h2>
+    <p class="muted">La receta actual aparece resaltada.</p>
+  </header>
+  <ul class="tree">
+    {{ node(root) }}
+  </ul>
+</article>
+{% endblock %}

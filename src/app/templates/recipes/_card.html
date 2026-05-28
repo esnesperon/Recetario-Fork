@@ -1,0 +1,23 @@
+<article class="card">
+  {% if it.r.image_url %}
+    <a href="{{ url_for('recipes.detail', safe=it.oid) }}"><img src="{{ it.r.image_url }}" alt="{{ it.r.title }}" class="card-img"></a>
+  {% else %}
+    <a href="{{ url_for('recipes.detail', safe=it.oid) }}" class="card-img card-img-placeholder"></a>
+  {% endif %}
+  <header>
+    <a href="{{ url_for('recipes.detail', safe=it.oid) }}"><strong>{{ it.r.title }}</strong></a>
+    {% if it.r.parent_oid %}<span class="badge">fork</span>{% endif %}
+  </header>
+  <p class="muted">por {{ it.r.author_username }}</p>
+  {% if it.r.description %}<p class="card-desc">{{ it.r.description[:160] }}{% if it.r.description|length > 160 %}…{% endif %}</p>{% else %}<p class="card-desc">&nbsp;</p>{% endif %}
+  <footer>
+    <small>
+      {% if it.n_votes %}⭐ {{ "%.1f"|format(it.avg) }} ({{ it.n_votes }}){% else %}Sin valoraciones{% endif %}
+    </small>
+    {% if it.r.tag_names %}
+      <div class="tags">
+        {% for t in it.r.tag_names %}<a href="{{ url_for('main.index', tag=t) }}" class="tag">#{{ t }}</a>{% endfor %}
+      </div>
+    {% endif %}
+  </footer>
+</article>

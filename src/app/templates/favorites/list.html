@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Mis favoritos{% endblock %}
+{% block content %}
+<h2>⭐ Mis favoritos</h2>
+{% if not items %}
+  <p class="muted">Aún no has añadido ninguna receta a favoritos.</p>
+{% else %}
+  <div class="grid-cards">
+    {% for it in items %}
+      {% include "recipes/_card.html" %}
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

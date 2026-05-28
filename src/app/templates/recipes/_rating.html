@@ -1,0 +1,19 @@
+<hgroup>
+  <h3>Valoración</h3>
+  <p>
+    {% if n_votes %}⭐ <strong>{{ "%.1f"|format(avg) }}</strong> / 5 ({{ n_votes }} voto{{ '' if n_votes == 1 else 's' }}){% else %}Sin valoraciones todavía.{% endif %}
+    {% if user_rating %} · Tu voto: {{ user_rating }}{% endif %}
+  </p>
+</hgroup>
+
+{% if current_user.is_authenticated %}
+  <form hx-post="{{ url_for('recipes.rate', safe=oid) }}"
+        hx-target="#rating-panel"
+        hx-swap="innerHTML"
+        class="inline-stars">
+    {{ rating_form.hidden_tag() }}
+    {% for n in [1,2,3,4,5] %}
+      <button type="submit" name="stars" value="{{ n }}" class="star-btn">{{ "★" * n }}{{ "☆" * (5 - n) }}</button>
+    {% endfor %}
+  </form>
+{% endif %}

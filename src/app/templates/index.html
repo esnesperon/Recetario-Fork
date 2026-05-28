@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Recetas{% endblock %}
+{% block content %}
+<hgroup>
+  <h2>Recetas de la comunidad</h2>
+  <p>Descubre recetas, forkéalas y crea tus propias variantes.</p>
+</hgroup>
+
+{% if author %}
+  <p>Mostrando recetas de <strong>{{ author }}</strong>. <a href="{{ url_for('main.index') }}">Quitar filtro</a></p>
+{% endif %}
+
+<form method="get" action="{{ url_for('main.index') }}" class="grid">
+  <input type="search" name="q" placeholder="Buscar por título o descripción…" value="{{ q }}">
+  <input type="text" name="tag" placeholder="Filtrar por etiqueta" value="{{ tag }}">
+  <button type="submit">Buscar</button>
+</form>
+
+{% if not items %}
+  <article><p>No hay recetas todavía. {% if current_user.is_authenticated %}<a href="{{ url_for('recipes.new') }}">Crea la primera</a>.{% else %}<a href="{{ url_for('auth.register') }}">Regístrate</a> para añadir una.{% endif %}</p></article>
+{% else %}
+  <div class="grid-cards">
+    {% for it in items %}
+      {% include "recipes/_card.html" %}
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Diferencias — {{ r.title }}{% endblock %}
+{% block content %}
+<article>
+  <header>
+    <a href="{{ url_for('recipes.detail', safe=oid) }}">← Volver a la receta</a>
+    <h2>Cambios respecto al padre</h2>
+    <p class="muted">
+      <strong>{{ r.title }}</strong> vs
+      <a href="{{ url_for('recipes.detail', safe=parent_oid) }}">{{ parent.title }}</a>
+    </p>
+  </header>
+
+  <div class="grid">
+    <section>
+      <h3>Ingredientes añadidos</h3>
+      {% if diff.ingredients_added %}
+        <ul>{% for i in diff.ingredients_added %}<li class="added">+ {{ i }}</li>{% endfor %}</ul>
+      {% else %}<p class="muted">Ninguno.</p>{% endif %}
+    </section>
+    <section>
+      <h3>Ingredientes eliminados</h3>
+      {% if diff.ingredients_removed %}
+        <ul>{% for i in diff.ingredients_removed %}<li class="removed">− {{ i }}</li>{% endfor %}</ul>
+      {% else %}<p class="muted">Ninguno.</p>{% endif %}
+    </section>
+  </div>
+
+  <section>
+    <h3>Pasos</h3>
+    {% if not diff.steps_changed %}
+      <p class="muted">Sin cambios.</p>
+    {% else %}
+      <div class="grid">
+        <div>
+          <h4>Padre</h4>
+          <ol>{% for s in diff.parent_steps %}<li>{{ s }}</li>{% endfor %}</ol>
+        </div>
+        <div>
+          <h4>Esta versión</h4>
+          <ol>{% for s in diff.my_steps %}<li>{{ s }}</li>{% endfor %}</ol>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+</article>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ "Editar" if mode == "edit" else "Nueva" }} receta{% endblock %}
+{% block content %}
+<article>
+  <h2>{{ "Editar receta" if mode == "edit" else "Nueva receta" }}</h2>
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {{ form.hidden_tag() }}
+    <label>{{ form.title.label.text }}{{ form.title(autofocus=True) }}</label>
+    {% for e in form.title.errors %}<small class="err">{{ e }}</small>{% endfor %}
+
+    <label>{{ form.description.label.text }}{{ form.description(rows=3) }}</label>
+    {% for e in form.description.errors %}<small class="err">{{ e }}</small>{% endfor %}
+
+    <label>{{ form.ingredients.label.text }}{{ form.ingredients() }}</label>
+    {% for e in form.ingredients.errors %}<small class="err">{{ e }}</small>{% endfor %}
+
+    <label>{{ form.steps.label.text }}{{ form.steps() }}</label>
+    {% for e in form.steps.errors %}<small class="err">{{ e }}</small>{% endfor %}
+
+    <label>{{ form.tags.label.text }}{{ form.tags() }}</label>
+    {% for e in form.tags.errors %}<small class="err">{{ e }}</small>{% endfor %}
+
+    <fieldset>
+      <legend>Imagen</legend>
+      <p><small class="muted">Puedes indicar una URL o subir un archivo. Si subes un archivo, se ignorará la URL.</small></p>
+      <label>{{ form.image_url.label.text }}{{ form.image_url() }}</label>
+      {% for e in form.image_url.errors %}<small class="err">{{ e }}</small>{% endfor %}
+      <label>{{ form.image_file.label.text }}{{ form.image_file() }}</label>
+      {% for e in form.image_file.errors %}<small class="err">{{ e }}</small>{% endfor %}
+      {% if mode == "edit" and r and r.image_url %}
+        <label><input type="checkbox" name="clear_image" value="1"> Eliminar imagen actual</label>
+      {% endif %}
+    </fieldset>
+
+    <div class="row-actions">
+      {{ form.submit(class_="contrast") }}
+      {% if mode == "edit" %}
+        <a href="{{ url_for('recipes.detail', safe=oid) }}" role="button" class="secondary outline">Cancelar</a>
+      {% else %}
+        <a href="{{ url_for('main.index') }}" role="button" class="secondary outline">Cancelar</a>
+      {% endif %}
+    </div>
+  </form>
+</article>
+{% endblock %}

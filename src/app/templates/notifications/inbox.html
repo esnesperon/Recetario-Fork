@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Notificaciones{% endblock %}
+{% block content %}
+<header class="row-actions">
+  <h2>🔔 Notificaciones</h2>
+  {% if items %}
+    <form method="post" action="{{ url_for('notifications.clear') }}" class="inline"
+          onsubmit="return confirm('¿Vaciar la bandeja?');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <button type="submit" class="secondary outline">Vaciar</button>
+    </form>
+  {% endif %}
+</header>
+
+{% if not items %}
+  <article><p class="muted">No tienes avisos.</p></article>
+{% else %}
+  <ul class="comments">
+    {% for it in items %}
+      <li>
+        {% if it.n.kind == "fork" %}
+          <strong>{{ it.n.actor }}</strong> forkeó tu receta
+        {% else %}
+          <strong>{{ it.n.actor }}</strong> comentó en tu receta
+        {% endif %}
+        {% if it.recipe_exists %}
+          <a href="{{ url_for('recipes.detail', safe=it.n.recipe_oid) }}">«{{ it.recipe_title }}»</a>
+        {% else %}
+          «{{ it.recipe_title }}»
+        {% endif %}
+        <small class="muted">· {{ it.n.created_at[:16].replace("T", " ") }}</small>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

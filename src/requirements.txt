@@ -1,0 +1,7 @@
+Flask>=3.0
+Flask-Login>=0.6
+Flask-WTF>=1.2
+WTForms>=3.1
+email-validator>=2.0
+sirope>=0.3
+redis>=5.0

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Recetario Fork{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://unpkg.com/htmx.org@1.9.12" defer></script>
+</head>
+
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token() }}"}'>
+  <nav class="container">
+    <ul>
+      <li><strong><a href="{{ url_for('main.index') }}">🍴 Recetario Fork</a></strong></li>
+    </ul>
+    <ul>
+      <li><a href="{{ url_for('main.index') }}">Recetas</a></li>
+      {% if current_user.is_authenticated %}
+      <li><a href="{{ url_for('recipes.new') }}">Nueva receta</a></li>
+      <li><a href="{{ url_for('favorites.mine') }}">Favoritos</a></li>
+      <li>
+        <a href="{{ url_for('notifications.inbox') }}">
+          🔔{% if unread_notifications %}<span class="notif-badge">{{ unread_notifications }}</span>{% endif %}
+        </a>
+      </li>
+      <li><a href="{{ url_for('users.profile', username=current_user.username) }}">{{ current_user.username }}</a></li>
+      <li><a href="{{ url_for('auth.logout') }}" role="button" class="secondary outline">Salir</a></li>
+      {% else %}
+      <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
+      <li><a href="{{ url_for('auth.register') }}" role="button" class="outline">Registrarse</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for cat, msg in messages %}
+    <article class="flash flash-{{ cat }}">{{ msg }}</article>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+
+</body>
+
+</html>

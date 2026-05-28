@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Error {{ code }}{% endblock %}
+{% block content %}
+<article>
+  <hgroup>
+    <h2>Error {{ code }}</h2>
+    <p>{{ msg }}</p>
+  </hgroup>
+  <a href="{{ url_for('main.index') }}" role="button">Volver al inicio</a>
+</article>
+{% endblock %}

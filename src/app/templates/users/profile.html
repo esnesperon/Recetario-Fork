@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ username }}{% endblock %}
+{% block content %}
+<article>
+  <header>
+    <hgroup>
+      <h2>👤 {{ username }}</h2>
+      {% if email %}<p class="muted">{{ email }}</p>{% endif %}
+    </hgroup>
+  </header>
+  <div class="stats">
+    <div><strong>{{ n_total }}</strong><small>recetas</small></div>
+    <div><strong>{{ n_originals }}</strong><small>originales</small></div>
+    <div><strong>{{ n_forks }}</strong><small>forks</small></div>
+    <div><strong>{{ "%.1f"|format(avg_received) if n_ratings else "—" }}</strong><small>⭐ media ({{ n_ratings }})</small></div>
+  </div>
+</article>
+
+<h3>Recetas de {{ username }}</h3>
+{% if not items %}
+  <p class="muted">Este usuario aún no ha publicado recetas.</p>
+{% else %}
+  <div class="grid-cards">
+    {% for it in items %}
+      {% include "recipes/_card.html" %}
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}

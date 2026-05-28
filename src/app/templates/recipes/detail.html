@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}{{ r.title }}{% endblock %}
+{% block content %}
+<article>
+  <header>
+    <nav aria-label="breadcrumb">
+      <a href="{{ url_for('main.index') }}">← Todas las recetas</a>
+    </nav>
+    <hgroup>
+      <h2>{{ r.title }} {% if r.parent_oid %}<span class="badge">fork</span>{% endif %}</h2>
+      <p class="muted">por <a href="{{ url_for('users.profile', username=r.author_username) }}"><strong>{{ r.author_username }}</strong></a> · {{ r.created_at[:10] }}</p>
+    </hgroup>
+
+    {% if parent %}
+      <p>Forkeada de <a href="{{ url_for('recipes.detail', safe=parent.oid) }}">{{ parent.r.title }}</a>
+         · <a href="{{ url_for('recipes.diff', safe=oid) }}">ver cambios respecto al padre</a></p>
+    {% endif %}
+
+    {% if r.tag_names %}
+      <div class="tags">
+        {% for t in r.tag_names %}<a href="{{ url_for('main.index', tag=t) }}" class="tag">#{{ t }}</a>{% endfor %}
+      </div>
+    {% endif %}
+  </header>
+
+  {% if r.image_url %}<img src="{{ r.image_url }}" alt="{{ r.title }}" class="detail-img">{% endif %}
+
+  {% if r.description %}<p>{{ r.description }}</p>{% endif %}
+
+  <div class="grid">
+    <section>
+      <h3>Ingredientes</h3>
+      <ul>{% for i in r.ingredients %}<li>{{ i }}</li>{% endfor %}</ul>
+    </section>
+    <section>
+      <h3>Pasos</h3>
+      <ol>{% for s in r.steps %}<li>{{ s }}</li>{% endfor %}</ol>
+    </section>
+  </div>
+
+  <footer class="row-actions">
+    {% if current_user.is_authenticated %}
+      <form method="post" action="{{ url_for('recipes.fork', safe=oid) }}" class="inline">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button type="submit" class="contrast">🍴 Forkear</button>
+      </form>
+      <span id="fav-btn-wrap">
+        {% include "recipes/_fav_btn.html" %}
+      </span>
+    {% endif %}
+    <a href="{{ url_for('recipes.tree', safe=oid) }}" role="button" class="outline">Árbol de versiones</a>
+    <a href="{{ url_for('recipes.export_md', safe=oid) }}" role="button" class="outline">⬇ Markdown</a>
+    {% if current_user.is_authenticated and current_user.username == r.author_username %}
+      <a href="{{ url_for('recipes.edit', safe=oid) }}" role="button" class="secondary outline">Editar</a>
+      {% if r.parent_oid %}
+        <form method="post" action="{{ url_for('recipes.merge_from_parent', safe=oid) }}" class="inline"
+              onsubmit="return confirm('Esto sobreescribirá tus ingredientes y pasos con los del padre. ¿Continuar?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+          <button type="submit" class="secondary outline">⇩ Traer cambios del padre</button>
+        </form>
+      {% endif %}
+      <form method="post" action="{{ url_for('recipes.delete', safe=oid) }}" class="inline"
+            onsubmit="return confirm('¿Seguro que quieres borrar esta receta?');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        <button type="submit" class="secondary">Borrar</button>
+      </form>
+    {% endif %}
+  </footer>
+</article>
+
+{% if children %}
+<article>
+  <h3>Forks de esta receta</h3>
+  <ul>
+    {% for coid, c in children %}
+      <li><a href="{{ url_for('recipes.detail', safe=coid) }}">{{ c.title }}</a> <small class="muted">por {{ c.author_username }}</small></li>
+    {% endfor %}
+  </ul>
+</article>
+{% endif %}
+
+<article id="rating-panel">
+  {% include "recipes/_rating.html" %}
+</article>
+
+<article>
+  <h3>Comentarios</h3>
+  <div id="comments-list">
+    {% include "recipes/_comments.html" %}
+  </div>
+
+  {% if current_user.is_authenticated %}
+    <form hx-post="{{ url_for('recipes.add_comment', safe=oid) }}"
+          hx-target="#comments-list"
+          hx-swap="innerHTML"
+          hx-on::after-request="if(event.detail.successful) this.reset()">
+      {{ comment_form.hidden_tag() }}
+      {{ comment_form.text(rows=3, placeholder="Escribe un comentario…") }}
+      {{ comment_form.submit(class_="outline") }}
+    </form>
+  {% else %}
+    <p class="muted"><a href="{{ url_for('auth.login') }}">Entra</a> para comentar.</p>
+  {% endif %}
+</article>
+{% endblock %}

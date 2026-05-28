@@ -1,0 +1,19 @@
+{% if not comments %}
+  <p class="muted">Todavía no hay comentarios.</p>
+{% else %}
+  <ul class="comments">
+    {% for coid, c in comments %}
+      <li>
+        <strong>{{ c.author_username }}</strong>
+        <small class="muted">{{ c.created_at[:16].replace("T", " ") }}</small>
+        <p>{{ c.text }}</p>
+        {% if current_user.is_authenticated and current_user.username == c.author_username %}
+          <button type="button" class="secondary outline"
+                  hx-post="{{ url_for('recipes.delete_comment', safe=c.recipe_oid, csafe=coid) }}"
+                  hx-target="#comments-list"
+                  hx-confirm="¿Borrar este comentario?">Borrar</button>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}

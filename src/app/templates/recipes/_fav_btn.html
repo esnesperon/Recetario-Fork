@@ -1,0 +1,7 @@
+<button type="submit"
+        hx-post="{{ url_for('recipes.toggle_favorite', safe=oid) }}"
+        hx-target="#fav-btn-wrap"
+        hx-swap="innerHTML"
+        class="{{ '' if is_fav else 'outline' }}">
+  {{ '★ En favoritos' if is_fav else '☆ Añadir a favoritos' }}
+</button>
