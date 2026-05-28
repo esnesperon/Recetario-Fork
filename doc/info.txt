@@ -1,5 +1,5 @@
 Título del proyecto: Recetario con versiones tipo fork
-URL del repositorio: <rellenar con la URL del repo Git que crees>
+URL del repositorio: https://github.com/esnesperon/Recetario-Fork.git
 URL del proyecto (web): http://127.0.0.1:5000
 
 Apellidos y nombre: Esperón Abilleira, Alex
