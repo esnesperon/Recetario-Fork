@@ -1,0 +1,7 @@
+Título del proyecto: Recetario con versiones tipo fork
+URL del repositorio: <rellenar con la URL del repo Git que crees>
+URL del proyecto (web): http://127.0.0.1:5000
+
+Apellidos y nombre: Esperón Abilleira, Alex
+DNI: 77481677J
+Asignatura: ALS
